@@ -133,7 +133,7 @@ School of Electrical Engineering
  x=u-u5;
  y=[1,2,3,4,5];
  z=conv(x,y);     % performs convolution of x & y
- stem(n,z);
+ stem(0:length(z)-1, z);
 
 
 
