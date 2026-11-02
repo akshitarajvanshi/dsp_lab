@@ -1,0 +1,2318 @@
+DIGITAL SIGNAL PROCESSING LAB — COMPLETE LAB TEXT
+
+Lab numbers, lab names, experiment numbers, experiment names, definitions, and the manual's experiment text and code. Manual code is retained as extracted, including original spelling, line wraps, and apparent errors; no replacement algorithm has been substituted. The four photographed source programs are transcribed separately under Labs 7 and 10. The fifth photograph shows DFT console output. For exact visual appearance of printed code images, refer to the source PDF and JPGs.
+
+
+========================================================================
+LAB NO.: 1
+LAB NAME: Analysis of Signals in Time Domain
+EXPERIMENT NO.: 1
+EXPERIMENT NAME: Analysis of Signals in Time Domain
+EXPERIMENT DEFINITION: Study sampled signals as functions of time, including step and sinusoidal signals, convolution, and correlation.
+========================================================================
+
+MANUAL TEXT AND CODE (ORIGINAL EXTRACTION)
+
+Experiment 1: Analysis of Signals in time domain
+1.   Aim: To study the analysis of signals in time-domain and understand the concepts of sampling,
+     convolution and correlation.
+
+
+2.   Software used: MATLAB
+
+
+3.   Theory:
+          Time-domain analysis is the study of a signal by observing how its amplitude varies with time.
+     It is one of the fundamental approaches in digital signal processing and provides insight into the
+     behavior and characteristics of signals before they are analyzed in other domains. Most real-
+     world signals, such as speech, audio, and biomedical signals, are initially examined in the time
+     domain to understand their temporal properties.
+
+        Digital signal processing operates on discrete-time signals, which are obtained by sampling
+     continuous-time signals at regular intervals. Sampling is the process of converting an analog
+     signal into a sequence of discrete samples while preserving the essential information of the
+     original signal. Proper selection of the sampling frequency is necessary to accurately
+     reconstruct the original signal and avoid information loss.
+
+         Convolution is a fundamental mathematical operation used to determine the output of a
+     linear time-invariant (LTI) system for a given input signal and system impulse response. It
+     describes how the characteristics of a system modify the input signal. Correlation is another
+     important operation that measures the degree of similarity between two signals or between
+     different segments of the same signal. It is widely used in applications such as pattern
+     recognition, synchronization, signal detection, and communication systems.
+
+     Understanding these concepts is essential for analyzing and processing digital signals and
+     forms the foundation for advanced topics such as digital filter design, frequency-domain
+     analysis, and real-time signal processing.
+
+
+
+4.   Program:
+
+
+ Example-1: Generate and plot the following signals:
+ a) Unit-step function                  b) Delayed step function with a delay of 5.
+ c) Step function with amplitude 5      d) Rectangular window of length 5               e) Ramp signal.
+
+
+        clc;                    % clears the command window
+        clear all;              % clears all variables
+        close all;              % closes all the figure windows
+        n=0:15;                 % time index for the discrete signal from 0 to 15
+        u=[(n)>=0];             % Unit Step
+        u5=[(n-5)>=0];          % Delayed step
+        a5=5*u;                 % Scaled unit step
+        xn=u-u5;                % rectangular window x[n]= u[n]-u[n-5]
+
+
+                                                                                                          9
+School of Electrical Engineering
+DSP lab                                                                    Date: ___/____/_____
+
+
+
+       xr=n.*u;           % Ramp signal
+       subplot(321); stem(n,u); title('Unit-step function');
+       ylabel('Amplitude'); subplot(322); stem(n,u5);
+       title('Delayed unit-step function'); subplot(323);
+       stem(n,a5); title('Amplitude scaled step function');
+       ylabel('Amplitude'); xlabel('n - >');
+       subplot(324); stem(n,xn); title('Window function '); xlabel('n              >');
+       subplot(325); stem(n,xr);
+       title('Ramp Function');
+       ylabel('Amplitude'); xlabel('n - >');
+
+
+
+
+ Example-2: Write MATLAB code to generate sine waves at different sampling frequencies.
+
+ clc; clear all; close all;
+ Fs=1000;                       % sampling frequency 1000 Hz
+ f=200;                         % signal frequency 200 Hz
+ t=0:1/Fs:(1/f);    % generation of the time sequence for 1 period duration.
+ x=5*sin(2*pi*f*t);      %sine wave of freq 200 Hz and amplitude 5, sampled
+ at Fs
+ subplot(3,1,1); stem(t,x);
+ title('Sine wave sampled at 1000 Hz, one period duration');
+ ylabel('Amplitude'); xlabel('Time');
+ Fs1=10000;       % sampling frequency 10000 Hz
+ t=0:1/Fs1:(1/f);
+
+
+
+                                                                                            10
+School of Electrical Engineering
+DSP lab                                                                              Date: ___/____/_____
+
+
+
+ x=5*sin(2*pi*f*t);
+ subplot(3,1,2); stem(t,x);
+ title('Sine wave sampled at 10000 Hz, one period duration');
+ ylabel('Amplitude'); xlabel('Time')
+ t=0:1/Fs1:(2/f);      % time sequence for two cycle duration
+ x = 5*sin(2*pi*f*t);
+ subplot(3,1,3);
+ stem(t,x);
+ title('Sine wave sampled at 10000 Hz, two cycle duration');
+ ylabel('Amplitude'); xlabel('Time');
+
+
+
+
+ Example-3: Write MATLAB program to find and plot the convolution between two signals
+ x[n] = u[n] – u[n−5] and y[n] = [1,2,3,4,5], where u[n] is a unit step function in the range 0:10.
+ Use “conv” function.
+
+
+ clc; clear; close all;
+ n=0:10;
+ u=[n>=0];
+ u5=[(n-5)>=0];
+ x=u-u5;
+ y=[1,2,3,4,5];
+ z=conv(x,y);     % performs convolution of x & y
+ stem(n,z);
+
+
+
+
+                                                                                                      11
+School of Electrical Engineering
+DSP lab                                                                          Date: ___/____/_____
+
+
+
+
+ Example-4: Write a MATLAB program to find and plot the cross-correlation between the two
+ signals x[n] = {3,11,7, ⏟
+                         0, −1,4,2} and y[n] = x[n−2] – w[n], where w[n] is a Gaussian sequence with
+ zero mean and unit variance.
+
+
+       clc; clear; close all;
+       x=[3,11,7,0,-1,4,2]; % first sequence
+       nx=-3:3;               % index for signal x
+       ny=nx+2;               % index for signal x delayed by 2
+       w=randn(1,length(x)); % random sequence generation
+       y=x+w;                 % second sequence
+       ns=nx(1)+ny(1);        % starting index
+       ne=nx(length(x))+ny(length(y)); % ending index
+       nz=ns:ne;              % index for correlation output
+       z=xcorr(x,y);          % cross correlation
+       stem(nz,z);
+       title('cross correlation');
+
+
+
+
+ The signal x and its delayed signal y have maximum correlation at time n = 2. Hence, the
+ correlation plot shows a maximum peak at n = 2. Such signal processing is used in Radar
+ applications.
+
+
+                                                                                                   12
+School of Electrical Engineering
+DSP lab                                                                       Date: ___/____/_____
+
+
+
+5.    Exercise
+
+
+ 1.       Generate the following signals
+              (a) (-1/2)k, (2)k and (-2)k, assuming k = 0 to 15
+              (b) Square wave with duty cycle 25%, 50% and 75%. (Use square function)
+              (c) Triangular wave. (Use sawtooth function)
+              (d) A multi-tone signal having the frequencies 10Hz, 30Hz and 60Hz.
+
+
+
+
+                                                                                               13
+School of Electrical Engineering
+DSP lab                                                                          Date: ___/____/_____
+
+
+
+ 2.    Write a MATLAB program to sketch the following discrete-time signals in the time range of -
+       10 to +10. If the sequence is complex, plot the magnitude and angle separately.
+       (a) x[𝑛] = u[𝑛] − u[𝑛 − 3]
+       (b) x[𝑛] = sin (nπ/3) 𝑢[𝑛]
+       (c) x[𝑛] = 0.5𝑛 𝑒𝑗𝜋𝑛/2
+
+
+
+
+                                                                                                     14
+School of Electrical Engineering
+DSP lab                                                                              Date: ___/____/_____
+
+
+
+ 3.    A simple digital differentiator is given by y[𝑛] = x[𝑛] − 𝑥[𝑛 − 1]. Implement this differentiator
+       and test with the following sequences. Plot the results and comment on the appropriateness
+       of this differentiator.
+       (a) x[𝑛] = 5(u[𝑛] − 𝑢[𝑛 − 20])
+       (b) x[𝑛] = (𝑢[𝑛] − 𝑢[𝑛 − 10]) + (20 − 𝑛)(𝑢[𝑛 − 10] − [𝑛 − 20])
+       (c) 𝑥[𝑛] = sin(𝜋𝑛/25 )(𝑢[𝑛] − 𝑢[𝑛 − 100]))
+
+
+
+
+                                                                                                           15
+School of Electrical Engineering
+DSP lab                                                                        Date: ___/____/_____
+
+
+
+ 4.    Write a MATLAB program to generate a pure sine wave of frequency 80Hz and add additive
+       white Gaussian noise with SNR of 10dB. (Use the function awgn.) Find and plot the
+       autocorrelation of the resulting sequence.
+
+
+
+
+          Experiment    Observation &       Results, Discussion     Exercise   Total [10]
+           Execution    Data Recording     and interpretation [2]     [2]
+              [3]             [3]
+
+
+
+
+                                                                                                16
+School of Electrical Engineering
+DSP lab                                                                             Date: ___/____/_____
+
+
+
+
+     
+
+========================================================================
+LAB NO.: 2
+LAB NAME: Analysis of Signals and Systems in Z-Domain
+EXPERIMENT NO.: 2
+EXPERIMENT NAME: Analysis of Signals and Systems in Z-Domain
+EXPERIMENT DEFINITION: Use the z-transform and difference equations to study discrete-time system outputs, poles, zeros, and stability.
+========================================================================
+
+MANUAL TEXT AND CODE (ORIGINAL EXTRACTION)
+
+Experiment 2: Analysis of Signals and Systems in Z-domain
+1. Aim: To study the analysis of signals and systems in Z-domain
+
+
+2. Software used: MATLAB
+
+
+3.   Theory:
+The z-transform is a fundamental mathematical tool used in digital signal processing to analyze
+discrete-time signals and systems in the complex frequency domain. It provides a convenient
+method for representing and solving linear difference equations, determining system characteristics,
+and analyzing the stability and frequency response of discrete-time systems. The z-transform of a
+discrete-time signal x[n] is defined as
+                                                     ∞
+
+                                         𝑋(𝑧) =      ∑ 𝑥[𝑛] 𝑧 −𝑛 ,
+                                                  𝑛= −∞
+
+where z is a complex variable. The set of values of z for which the z-transform converges is known
+as the Region of Convergence (ROC), which plays an important role in determining the existence,
+causality, and stability of a system.
+
+The transfer function of a discrete-time system is expressed as the ratio of the output to the input in
+                                              𝑌(𝑧)
+the z-domain and is represented as 𝐻(𝑧) = 𝑋(𝑧). The locations of poles and zeros of the transfer
+function provide valuable information about the system's behavior. A system is considered stable if
+all its poles lie inside the unit circle in the z-plane, while the frequency response of the system can
+be obtained by evaluating the transfer function on the unit circle. The z-transform simplifies the
+analysis of discrete-time systems by converting convolution operations in the time domain into
+multiplication in the z-domain, making it an indispensable tool in the design and analysis of digital
+filters and other DSP applications.
+
+
+
+4.   Program:
+
+
+Example-1: Determine the unit impulse response h[n] of a system described by the difference
+equation: y[𝑛] − 0.6𝑦[𝑛 – 1] − 0.16𝑦[𝑛– 2] = 5𝑥[𝑛].
+       clc; clear; close all;
+       a=[1,-0.6,-0.16];      % denominator coefficients of system function
+       b=[5,0,0];             % numerator coefficients of system function
+       N=16;                  % length of the output
+       x=[1,zeros(1,N-1)];    % input is impulse function of length N
+       h=filter(b,a,x);       % output of system is impulse response n=0:N-
+       1;
+       stem(n,h);
+       title ('unit impulse response');
+
+
+
+
+                                                                                                          17
+School of Electrical Engineering
+DSP lab                                                                                  Date: ___/____/_____
+
+
+
+
+ Example-2: Consider a causal LTI system described by the difference equation y(n) = 1/3 [x(n) + x(n −1)
+ + x(n − 2)] + 0.95y(n −1) − 0.9025y(n − 2) with initial conditions y(−1) = −2, y(−2) = −3; x(−1) = 1, x(−2) =
+ 1. Write a MATLAB program to determine the response of the system for the input x(n) = cos(n/3)u(n).
+
+       clc; clear; close all;
+       a = [1 -0.95 0.9025];
+       b = [1 1 1]/3;
+       yi = [-2 -3];            % Initial conditions array
+       xi = [1 1];              % Initial conditions array
+       ic = filtic(b,a,yi,xi); % converts past input xi and past output yi into
+       % initial conditions which is required for the computation of output
+       n = 0:100;
+       u = [n>=0];
+       x = 3*cos(n*pi/3).*u;              % input signal
+       y = filter(b,a,x,ic);    % o/p signal
+       subplot(211), plot(n,x); title('input
+       signal') subplot(212), plot(n,y);
+       title('output signal')
+
+
+
+
+                                                                                                             18
+School of Electrical Engineering
+DSP lab                                                                         Date: ___/____/_____
+
+
+
+ Example-3: Consider a causal LTI system described by the difference equation given by y(n) –
+ 1.81y(n - 1) + 0.81y(n − 2) = x(n) + 0.5 x(n − 1). Write MATLAB program to obtain the following:
+       a) System function H(z) in the partial fraction form
+       b) Pole – zero plot
+       c) Frequency response of the system
+       d) Unit impulse response of the system
+       e) Output of the system for the given input x[n] = 3cos(n/3 )u[n]
+
+
+       clc; clear; close all; a=[1,-
+       1.81,0.81];
+       b=[1,0.5,0];
+
+       % To obtain system function in the partial fraction form
+       [r p k]=residuez(b,a); % residues, poles and direct terms of the partial
+       fraction % expansion of the system function.
+       disp(['r = ' num2str(r')]);
+       disp(['p = ' num2str(p')]);
+       disp(['k = ' num2str(k')]);
+
+       % To obtain the pole-zero plot
+       [z p k]=tf2zp(b,a); % To obtain zeros, ploes and gain constant
+       of the system. disp('Zeros are at'); disp(z);
+       disp('poles are at'); disp(p);
+       disp('Gain Constant is'); disp(k);
+       zplane(b,a); % pole–zero plot
+
+       % To obtain frequency response of the system
+       [h w]=freqz(b,a); % returns the N-point complex frequency response
+       figure;
+       subplot(211), plot(w,abs(h)), title('Magnitude
+       Response'); xlabel('Frequency in radians'),
+       ylabel('Amplitude'); subplot(212),
+       plot(w,angle(h)), title('Phase Response');
+       xlabel('Frequency in radians'), ylabel('Phase in radians');
+
+       % To Obtain the unit impulse response of the system
+       L=15; % First 15 values of the impulse response
+       [h n]=impz(b,a,L);
+       figure; stem(h);
+       title('Impulse Response'); grid on;
+       xlabel('Sample Number'),
+       ylabel('Amplitude');
+
+       % To find the output of the system for the given input
+       n=0:100;
+       u=[n>=0];
+       x=3*cos(n*pi/3).*u; % input signal
+       y=filter(b, a, x); % o/p signal figure;
+
+
+                                                                                                    19
+School of Electrical Engineering
+DSP lab                            Date: ___/____/_____
+
+
+
+       subplot(211), plot(n,x);
+       subplot(212), plot(n,y);
+
+
+
+
+Results:
+r = 7.8947     -6.8947
+p=1            0.81
+k=0
+
+Zeros are at
+       0
+-0.5000
+
+poles are at
+1.0000
+0.8100
+
+Gain Constant is
+1
+
+
+
+
+                                                    20
+School of Electrical Engineering
+DSP lab                            Date: ___/____/_____
+
+
+
+
+                                                    21
+School of Electrical Engineering
+DSP lab                                                                        Date: ___/____/_____
+
+
+
+5. Exercises
+
+
+ 1.    Find the system output y[n]; 0≤ n ≤10 of an LTI system with impulse response:
+       h[n] = (0.5)𝑛{𝑢[𝑛] – 𝑢[𝑛 – 10]) when the inputs are:
+       (a) 𝑥[𝑛] = (0.8)𝑛 (𝑢[𝑛]– 𝑢[𝑛 − 5])
+       (b) x[n] = δ[n] + 3δ[n – 1] + 4δ[n – 3]
+
+
+
+
+                                                                                                22
+School of Electrical Engineering
+DSP lab                                                                             Date: ___/____/_____
+
+
+
+ 2.    An anti-causal LTI system is described by the system function H(z) = (z 2 - 1) / (z - 3)2.
+       Determine the following using MATLAB
+       a) impulse response
+       b) difference equation representation
+       c) pole-zero plot
+       d) output y[n] if the input is x(n) = 3sin(n/3) u(n)
+
+
+
+
+                                                                                                     23
+School of Electrical Engineering
+DSP lab                                                                           Date: ___/____/_____
+
+
+
+ 3.    Write a MATLAB program to determine the system function of a system for which the
+       location of zeros and poles, and the value of the gain factor are specified. Test this program
+       for various specifications.
+
+
+
+
+                                                                                                        24
+School of Electrical Engineering
+DSP lab                                                                            Date: ___/____/_____
+
+
+
+ 4.    Consider a causal LTI system described by the difference equation y[n] = x[n]− x[n−1]+ 0.81y[n−
+       2] with initial conditions y(−1) = y(−3) = 2 Write a MATLAB program to determine the response of
+       the system for the input x(n) = 0.7n u[n +1] .
+
+
+
+
+          Experiment     Observation &       Results, Discussion       Exercise     Total [10]
+           Execution     Data Recording     and interpretation [2]       [2]
+              [3]              [3]
+
+
+
+
+                                                                                                      25
+School of Electrical Engineering
+DSP lab                            Date: ___/____/_____
+
+
+
+
+                                                    26
+School of Electrical Engineering
+DSP lab                                                                            Date: ___/____/_____
+
+
+
+
+     
+
+========================================================================
+LAB NO.: 3
+LAB NAME: Analysis of Signals and Systems in Frequency Domain
+EXPERIMENT NO.: 3
+EXPERIMENT NAME: Analysis of Signals and Systems in Frequency Domain
+EXPERIMENT DEFINITION: Analyze the frequency content of discrete signals with DTFT/DFT and frequency-response methods.
+========================================================================
+
+MANUAL TEXT AND CODE (ORIGINAL EXTRACTION)
+
+Experiment 3: Analysis of Signals and Systems in Frequency
+                               domain
+
+
+1. Aim: To study the frequency-domain representation and analysis of signals and systems.
+
+
+2. Software used: MATLAB
+
+
+3.   Theory:
+     Frequency-domain analysis is a fundamental technique in digital signal processing used to
+examine the frequency components present in a signal. While time-domain analysis describes how a
+signal varies with time, frequency-domain analysis reveals how the signal's energy or power is
+distributed across different frequencies. This representation is particularly useful for understanding
+the spectral characteristics of signals and the behavior of digital systems.
+
+    The transformation from the time domain to the frequency domain is achieved using the
+Discrete Fourier Transform (DFT), which expresses a finite-length discrete-time signal as a sum of
+sinusoidal components of different frequencies. The Fast Fourier Transform (FFT) is an efficient
+algorithm for computing the DFT, significantly reducing the computational complexity. The
+magnitude spectrum indicates the strength of various frequency components, while the phase
+spectrum provides information about their phase relationships.
+
+     The frequency response of a discrete-time system describes its effect on different frequency
+components of the input signal. It is obtained by evaluating the system's transfer function on the unit
+circle in the z-plane. Frequency-domain analysis is extensively used in digital filter design, spectrum
+analysis, communication systems, speech and image processing, biomedical signal analysis, and
+many other signal processing applications. A clear understanding of the frequency-domain
+representation of signals and systems is essential for analyzing, designing, and implementing
+efficient digital signal processing algorithms.
+
+
+
+4.   Program:
+
+
+ Example-1: Find the Fourier transform (DTFT) and Discrete Fourier transform (DFT) of the signal
+ x[n] = (0.5)n u[n], and plot the magnitude and the phase of the same.
+
+       clc; clear all; close all;
+       N=32; n=0:(N-1); w=n*2*pi/N;
+       x=(0.5).^n;
+       X=fft(x);% compute Fourier transform of the signal
+       subplot(211); plot(w,abs(X)); ylabel('Magnitude');
+       title('DTFT');
+       subplot(212); plot(w,angle(X));
+       ylabel('Phase angle'); xlabel('Frequency in radians >')
+
+
+                                                                                                     27
+School of Electrical Engineering
+DSP lab                                                                        Date: ___/____/_____
+
+
+
+
+       figure; subplot(211); stem(n,abs(X)); ylabel('Magnitude');
+       title('DFT'); subplot(212); stem(n,angle(X)); ylabel('Phase angle');
+       xlabel('Sample numbers ---- ');
+
+
+
+
+Note that DTFT is a continuous function of ω and hence “plot” command is used to plot the graphs.
+Only one period of DTFT has been shown (from 0 to 2π radians). DFT is a discrete function and
+hence “stem” command is used to plot the graphs. The x-axis is sample numbers.
+
+
+
+
+                                                                                                28
+School of Electrical Engineering
+DSP lab                                                                   Date: ___/____/_____
+
+
+
+ Example-2: Find the DFT and DTFT of 20 cycles of a sinewave of frequency 50 Hz, sampled at
+ 1000 Hz. Plot the magnitude and phase.
+
+
+ clc; clear all; close all; f =
+ 50; Fs = 1000;
+ t = 0:(1/Fs):(20/f);           % 20 cycles of input x =
+ sin(2*pi*f*t);
+ X = fft(x,256);                % 256-point DFT
+ subplot(211); stem(abs(X));
+ ylabel('Magnitude');
+ title('DFT'); subplot(212);
+ stem(angle(X));
+ ylabel('Phase');
+ xlabel('Samples --->')
+ L = length(X)/2;               % take half of the samples (0 to pi radians) f
+ = (0:(L-1))/L*(Fs/2);          % convert sample numbers into frequency in Hz
+ figure; subplot(211); plot(f,abs(X(1:L)));
+ ylabel('Magnitude');
+ title('DTFT'); subplot(212);
+ plot(f,angle(X(1:L)));
+ ylabel('Phase'); xlabel('Frequency
+ in hertz');
+
+
+
+
+              The x-axis ranges from 0 to 255 corresponding to 0 to 2π radians
+
+
+
+
+                                                                                           29
+School of Electrical Engineering
+DSP lab                                                                          Date: ___/____/_____
+
+
+
+
+ Note: Since the sampling frequency is 1000 Hz, the highest frequency component in the graph
+ should be 500 Hz, corresponding to π radians. Hence half of the samples of DFT are taken for
+ plotting. The plot shows a peak at 50 Hz which is the frequency of the sinewave signal.
+
+
+
+ Example-3: Write a MATLAB program to compute the circular convolution of two signals x1[n] =
+ {1, 2, 3, 4, 5, 6, 7, 8} and x2[n] = {1, 1, 1, 1} using DFT-IDFT method, and verify it using direct
+ computation. Also show how linear convolution can be achieved using DFT-IDFT
+ method.
+
+
+clc; clear all; close all; x1 =
+[1 2 3 4 5 6 7 8];
+x2 = [1 1 1 1];
+N1 = length(x1);         % length of the first sequence N2
+= length(x2);            % length of the second sequence N =
+max(N1,N2);              % N is the maximum of N1 & N2
+y = cconv(x1,x2,N);      % direct computation of N-point circular convolution
+
+% DFT-IDFT method
+X1 = fft(x1,N);
+X2 = fft(x2,N);
+Y = X1.*X2;                    % element by element multiplication of two DFTs
+z = ifft(Y,N);                 % inverse DFT of the product gives circ. convolution
+display(y); display(z);
+
+% Linear convolution using the above method
+yy = conv(x1,x2);        % direct computation of linear convolution N
+= length(yy);            % Length N = N1 + N2 - 1
+X1 = fft(x1,N);
+X2 = fft(x2,N);
+Y = X1.*X2;
+
+
+                                                                                                   30
+School of Electrical Engineering
+DSP lab                                                         Date: ___/____/_____
+
+
+
+zz = ifft(Y,N);           % Linear convolution using DFT-IDFT
+display(yy); display(zz);
+
+
+
+ Results:
+
+
+
+
+                                                                                 31
+School of Electrical Engineering
+DSP lab                            Date: ___/____/_____
+
+
+
+
+                                                          32
+School of Electrical Engineering
+DSP Lab                                             Manipal Institute of Technology Bengaluru
+
+
+5. Exercises:
+
+
+1.    Let x[𝑛] = (0.9 𝑒j3𝜋n), 0 ≤ 𝑛 ≤ 15. Determine X(𝑒 𝑗𝜔) and verify its periodicity property.
+
+
+
+
+                                                                                             33
+School of Electrical Engineering
+DSP Lab                                            Manipal Institute of Technology Bengaluru
+
+
+2.    Determine the frequency response of the filters, which are represented by the
+      difference equations given below. Also, state what type of filter each defines by
+      observing the response (like LPF, HPF etc.)
+        a) y[𝑛] + 0.13y[𝑛 − 1] + 0.52𝑦[𝑛 − 2] + 0.3𝑦[𝑛 − 3] = 0.16𝑥[𝑛] − 0.48𝑥[𝑛 − 1] +
+            0.48𝑥(𝑛 − 2) − 0.16𝑥(𝑛 − 3]
+        b) y[𝑛] − 0.268y[𝑛 − 2] = 0.634𝑥[𝑛] − 0.634𝑥[𝑛 −2]
+        c) y[𝑛] + 0.268y[𝑛 − 2] = 0.634𝑥[𝑛] + 0.634𝑥[𝑛 − 2]
+        d) 10y[𝑛] – 5y[𝑛 − 1] + 𝑦[𝑛 − 2] = 𝑥[𝑛] − 5𝑥[𝑛 − 1] + 10𝑥[𝑛 − 2]
+
+
+
+
+                                                                                          34
+School of Electrical Engineering
+DSP Lab                            Manipal Institute of Technology Bengaluru
+
+
+
+
+                                                                         35
+School of Electrical Engineering
+DSP Lab                                            Manipal Institute of Technology Bengaluru
+
+
+3.    Find and plot the frequency response of a causal 3-point moving averager. Generate the
+      first 100 samples of 0.9u[𝑛] and corrupt it using a random signal. Pass the corrupted
+      signal through the moving point averager and plot the output.
+
+
+
+
+                                                                                           36
+School of Electrical Engineering
+DSP Lab                                             Manipal Institute of Technology Bengaluru
+
+
+4.    Find the DFT of multitone sinewave with 30Hz, 80Hz, 120Hz frequency components
+      and plot the magnitude Vs. frequency in Hz.
+
+
+
+
+                                                                                          37
+School of Electrical Engineering
+DSP Lab                                          Manipal Institute of Technology Bengaluru
+
+
+
+
+       Experiment    Observation &     Results, Discussion     Exercise   Total [10]
+        Execution    Data Recording   and interpretation [2]     [2]
+           [3]             [3]
+
+
+
+
+                                                                                       38
+School of Electrical Engineering
+DSP Lab                                             Manipal Institute of Technology Bengaluru
+
+
+                       
+
+========================================================================
+LAB NO.: 4
+LAB NAME: IIR Filter Design
+EXPERIMENT NO.: 4
+EXPERIMENT NAME: IIR Filter Design
+EXPERIMENT DEFINITION: Design analog and digital recursive (infinite impulse response) filters and inspect their frequency responses.
+========================================================================
+
+MANUAL TEXT AND CODE (ORIGINAL EXTRACTION)
+
+Experiment 4: IIR Filter Design
+
+
+1. Aim: To design and analyze analog and digital infinite-duration impulse response (IIR)
+   filters.
+
+
+2. Software used: MATLAB
+
+
+3.   Theory:
+    An Infinite Impulse Response (IIR) filter is a recursive system whose output depends on
+the present and past input samples as well as past output samples. Because of this feedback
+structure, its impulse response theoretically continues for an infinite duration. IIR filters
+generally achieve the required frequency-selective characteristics with a lower filter order
+than Finite Impulse Response (FIR) filters, making them computationally efficient.
+
+    Analog IIR filters are commonly designed using standard approximations such as
+Butterworth, Chebyshev Type I, Chebyshev Type II, and Elliptic responses. These
+approximations differ in passband flatness, stopband attenuation, transition width, and ripple
+characteristics. Digital IIR filters are usually obtained from analog prototypes using
+transformation techniques such as the impulse invariance method or bilinear transformation.
+
+IR filters are widely used in audio processing, communication systems, biomedical signal
+processing, control systems, and noise reduction applications.
+
+
+
+4.   Program:
+ Example-1: Design an analog Butterworth low-pass prototype filter of order 5. Use it to get
+ an unnormalized actual Butterworth filter with cutoff frequency of 0.5π rad/sec.
+
+
+       clc; clear; close all;
+       N = 5;                          % order of the filter
+       [z p k] = buttap(5);            % Butterworth LPF prototype
+       [num, den] = zp2tf(z,p,k);      % pole-zero to transfer function
+       [h,w] = freqs(num,den);         % frequency response in s-domain
+       semilogx(w,20*log10(abs(h))); % plot in semi log graph
+       title('Normalized prototype filter');
+       xlabel('Frequency in rad/sec'); ylabel('Gain in dB');
+       wc = 0.5*pi;                    % actual cutoff frequency
+       p1 = p*wc;                      % scale the poles
+       k1 = k*wc^N;                    % scale the gain factor
+       [num1,den1] = zp2tf(z,p1,k1);
+       [h1,w1] = freqs(num1,den1);
+       figure; semilogx(w1,20*log10(abs(h1)));
+       title('Required filter');
+       xlabel('Frequency in rad/sec'); ylabel('Gain in dB');
+
+
+                                                                                            39
+School of Electrical Engineering
+     DSP Lab                                                    Manipal Institute of Technology Bengaluru
+
+
+
+
+       Note that the cut-off frequency for the normalized filter is 1, whereas it is 0.5π = 1.57 for the
+       required filter.
+
+       num1 =            0          0           0              0          0          9.5631
+       den1 =            1.0000     5.0832     12.9195        20.2939    19.7014     9.5631
+
+
+
+     The transfer function of the filter is:
+
+                                                             9.5631
+                𝐻(𝑠) =
+                         𝑠 + 5.0832 𝑠 + 12.9195 𝑠 + 20.2939 𝑠2 + 19.7014 𝑠 + 9.5631
+                          5            4                 3
+
+
+
+
+Example-2: Design an analog Butterworth low-pass filter, given the following specifications and
+plot the frequency response. Passband edge = 100 Hz, Stopband edge = 500 Hz, Ripple in
+passband = 1 dB, Attenuation in the stopband is 40 dB.
+
+
+  clc; clear; close all;
+  fp = 100; wp = 2*pi*fp; % frequency in radians/sec
+  fs = 500; ws = 2*pi*fs;
+  rp = 1; rs = 40;
+  [N wc] = buttord(wp,ws,rp,rs,'s')             % obtain order and cut-off frequency
+  [b a] = butter(N,wc,'s');                     % obtain num and den coefficients
+  [h w] = freqs(b,a);                           % obtain frequency response in s-domain
+  f = w/(2*pi);                                 % convert frequency to Hz
+  semilogx(f,20*log10(abs(h)));
+  grid on; title('Frequency response');
+  ylabel('Magnitude in dB');
+  xlabel('Frequency in Hz');
+
+
+
+
+                                                                                                      40
+     School of Electrical Engineering
+DSP Lab                                             Manipal Institute of Technology Bengaluru
+
+
+
+
+ Results:
+
+ N=4
+ wc/(2*pi) = 158.1159
+
+ Verify that the gain is -3 dB at f = 158 Hz, rp = -1 dB at 100 Hz and rs = -40 dB at 500 Hz
+
+
+
+
+                                                                                               41
+School of Electrical Engineering
+DSP Lab                                            Manipal Institute of Technology Bengaluru
+
+
+5. Exercises
+
+
+ 1.    Given the following filter specifications: Passband edge = 200 Hz; Rp = 1dB;
+       Stopband edge = 700Hz; Rs= 50 dB.
+       a.) Design an analog lowpass Butterworth filter
+       b.) Design an analog lowpass Chebyshev Type 1 filter
+       c.) Design an analog lowpass Chebyshev Type 2 filter
+       d.) Design an analog lowpass Elliptic filter
+       Plot the frequency response for each case and compare them.
+
+
+
+
+                                                                                         42
+School of Electrical Engineering
+DSP Lab                                            Manipal Institute of Technology Bengaluru
+
+
+ 2.    Given the following filter specifications: Passband edge: 1 kHz; Rp = 1dB; Stopband
+       edge: 500Hz; Rs= 50 dB.
+       a.) Design an analog high pass Butterworth filter
+       b.) Design an analog high pass Chebyshev Type 1 filter
+
+
+
+
+                                                                                             43
+School of Electrical Engineering
+DSP Lab                                             Manipal Institute of Technology Bengaluru
+
+
+PART - B: Digital IIR Filters
+
+
+ Example-1: Design a low-pass digital filter using an analog Butterworth filter to satisfy 𝜔𝑝 =
+ 0.2𝜋, 𝜔𝑠 = 0.3𝜋, 𝑅𝑝 = 1 𝑑𝐵, 𝑅s = 15 𝑑𝐵. Use the impulse invariance technique to digitize.
+
+
+
+ clc; clear; close all;
+ wp = 0.2*pi; ws =
+ 0.3*pi; rp = 1; rs =
+ 15;
+ [N wc] = buttord(wp,ws,rp,rs,'s') % Order and cutoff frequency of analog
+ filter
+ [bs as] = butter(N,wc,'s');         % num and den coefficients in s-domain
+ [bz az] = impinvar(bs,as);          % coefficients in z-domain using impulse
+ invar (T=1)
+ [h w] = freqz(bz,az);               % frequency response in z-domain
+ plot((w/pi),20*log10(abs(h))); grid on;
+ title('Frequency response'); ylabel('Magnitude in dB'); xlabel('Frequency
+ in pi units');
+
+
+
+
+ Zoom-in the graph and verify that gain is -1 dB at 0.2π (passband edge), -15 dB at 0.3π
+ (stopband edge) and -3 dB at 0.225π (cutoff frequency)
+
+ Example-2: Simulate a multitone signal with 50Hz and 200 Hz frequencies. Filter the signal
+ through a 3rd order digital Butterworth LPF with 3-dB cutoff frequency 100 Hz. Plot the
+ spectrum of the input and the filtered signal.
+
+       clc; clear; close all;
+       Fs = 1000;                                     % sampling frequency
+       wc = 100/(Fs/2);                               % normalized cutoff frequency
+       [b a] = butter(3,wc);                          % digital filter coefficients
+       using BLT
+       [h w] = freqz(b,a);                            % frequency response
+
+                                                                                             44
+School of Electrical Engineering
+DSP Lab                                   Manipal Institute of Technology Bengaluru
+
+
+       f = (w/pi)*(Fs/2);                    % convert normalized frequency
+       into Hz
+       plot(f,20*log10(abs(h))); grid on;
+       ylabel('Gain in dB'); xlabel('Freq in Hz');
+       title('Filter response'); t = 0:(1/Fs):1; % time sequence
+       x = sin(2*pi*50*t) + sin(2*pi*200*t);      % input signal with 50Hz and
+       200Hz freqs
+       y = filter(b,a,x);                    % obtain the output of the filter
+       X = fft(x,512);                       % spectrum of the input
+       Y = fft(y,512);                       % spectrum of the output
+       L = length(X)/2;                      % take half of the samples
+       (0 to pi radians)
+       f = (0:(L-1))/L*(Fs/2);               % convert sample numbers
+       into frequency in Hz
+       figure; subplot(211); plot(f,abs(X(1:L)));
+       title('Spectrum of input');
+       subplot(212); plot(f,abs(Y(1:L)));
+       title('Spectrum of output'); xlabel('Frequency in Hz');
+
+
+
+
+                                                                                45
+School of Electrical Engineering
+  DSP Lab                                            Manipal Institute of Technology Bengaluru
+
+
+Note that input signal contains two frequencies 50 Hz and 200 Hz, whereas the output signal
+contains only one frequency 50 Hz. The other frequency has been filtered out by the LPF.
+
+ L=length(x)/4;                      % add these 3 lines to the program to
+ plot the input & output
+ figure;
+ subplot(211);
+ plot(t(1:L),x(1:L));
+ title('input signal')
+ subplot(212);
+ plot(t(1:L),y(1:L));
+ title('output signal')
+
+
+
+
+                                                                                              46
+  School of Electrical Engineering
+DSP Lab                                                 Manipal Institute of Technology Bengaluru
+
+
+Exercises:
+ 1.
+                                                        𝑠+1
+                                           𝐻(𝑠) =
+                                                    𝑠 +5𝑠+1
+                                                    2
+
+
+       Transform H(s) into H(z) using the impulse invariance technique in which T = 0.1s.
+       First find the solution manually and then verify your result with the help of a MATLAB
+       program. Also plot the magnitude responses of the analog and the resulting digital
+       filter and comment on the result.
+
+
+
+
+                                                                                              47
+School of Electrical Engineering
+DSP Lab                                             Manipal Institute of Technology Bengaluru
+
+
+ 2.    Design low-pass digital filter to satisfy: ωp = 0.3π, ωs = 0.5π, Rp = 1 dB, Rs = 20 dB,
+       using:
+       i)       Chebyshev-I filter
+       ii)      Chebyshev-II filter
+       iii)     Elliptic filter.
+       Use the impulse invariance technique with T = 1 for all above.
+
+
+
+
+       Experiment     Observation &      Results, Discussion       Exercise    Total [10]
+        Execution     Data Recording    and interpretation [2]       [2]
+           [3]              [3]
+
+
+
+
+                                                                                             48
+School of Electrical Engineering
+DSP Lab                                              Manipal Institute of Technology Bengaluru
+
+
+                       
+
+========================================================================
+LAB NO.: 5
+LAB NAME: FIR Filter Design
+EXPERIMENT NO.: 5
+EXPERIMENT NAME: FIR Filter Design
+EXPERIMENT DEFINITION: Design nonrecursive finite impulse response filters using windows and frequency sampling.
+========================================================================
+
+MANUAL TEXT AND CODE (ORIGINAL EXTRACTION)
+
+Experiment 5: FIR Filter Design
+
+
+1. Aim: To design and study finite-duration impulse response (FIR) filters.
+
+
+2. Software used: MATLAB
+
+
+3.   Theory:
+     A Finite Impulse Response (FIR) filter is a non-recursive digital filter whose output
+depends only on the present and past input samples. Since there is no feedback from the
+output to the input, the impulse response of an FIR filter has a finite duration, becoming zero
+after a finite number of samples. FIR filters are inherently stable and can be designed to
+exhibit an exactly linear phase response, making them suitable for applications where phase
+distortion must be minimized.
+
+    FIR filters are commonly designed using techniques such as the window method,
+frequency sampling method, and optimal approximation methods. In the window method, the
+ideal impulse response is truncated using window functions such as Rectangular, Hamming,
+Hanning, Blackman, or Kaiser windows to obtain the desired filter characteristics. The choice
+of window influences the filter's transition width and stopband attenuation.
+
+     Since FIR filters contain only zeros and no finite poles, they are always stable. Owing to
+their stability, linear phase property, and ease of implementation, FIR filters are widely used
+in digital communication systems, audio and speech processing, image processing,
+biomedical signal processing, and multirate signal processing applications.
+
+
+
+4.   Program:
+
+
+Example-1: Design a low-pass digital FIR filter using Hamming window, whose desired
+specifications are: ωp = 0.2π rad, ωs = 0.4π rad, maximum passband ripple = 0.25 dB,
+minimum stopband attenuation = 50 dB.
+
+
+       clc; clear; close all;
+       wp = 0.2; ws = 0.4;            % normalized frequencies (in pi units)
+       N = ceil(8/(ws-wp));           % estimate the filter order
+       win = hamming(N+1);            % Hamming window used to get 53 dB
+       attenuation
+       wc = (wp+ws)/2;                % wc taken as average of wp and ws
+       b = fir1(N,wc,"low",win);      % obtain numerator coefficients
+       [h w] = freqz(b,1);            % frequency response in z-domain.
+       Note: a = 1
+       plot((w/pi),20*log10(abs(h))); grid on;
+       title('FIR filter using Hamming window');
+       ylabel('Gain in dB'); xlabel('Normalized freq in pi units');
+
+
+                                                                                              49
+School of Electrical Engineering
+DSP Lab                                             Manipal Institute of Technology Bengaluru
+
+
+
+
+ Note that the order of the filter is N = 40. Zoom-in the graph and find out the gains at ω =
+ 0.2π is lesser than 0.25 dB, and the gain at ω = 0.4π is more than 50 dB, as per the
+ required specifications.
+
+                         Window           Stopband
+                                          attenuation
+                         Rectangular          21
+                         Bartlett             25
+                         Hanning              44
+                         Hamming              53
+                         Blackman             74
+
+ Example-2: Design a high-pass digital FIR filter using window method, whose desired
+ specifications are: ωp = 0.5π rad, ωs = 0.3π rad, maximum passband ripple = 0.25 dB,
+ minimum stopband attenuation = 40 dB.
+
+       clc; clear; close all;
+       wp = 0.5; ws = 0.3;            % normalized frequencies (in pi units)
+       N = ceil(8/(wp-ws));           % estimate the order of the filter
+       win = hanning(N+1);            % Hanning window used to get 44 dB
+       attenuation
+       wc = (wp+ws)/2;                % wc taken as average of wp and ws
+       b = fir1(N,wc,"high",win);     % obtain numerator coefficients
+       [h w] = freqz(b,1);            % frequency response in z-domain
+       plot((w/pi),20*log10(abs(h)));
+       grid on;
+       title('FIR HPF using Hanning window');
+       ylabel('Gain in dB'); xlabel('Normalized freq in pi units');
+
+
+
+
+                                                                                            50
+School of Electrical Engineering
+DSP Lab                                              Manipal Institute of Technology Bengaluru
+
+
+
+
+ Example-3: Certain signal has 100 Hz, 300 Hz and 500 Hz components. Design a suitable
+ FIR filter to select only the 300 Hz component. Filter the signal using the filter and plot the
+ spectrum of the input and the filtered signal. Use sampling frequency 2000 Hz.
+
+       clc; clear; close all;
+       Fs = 2000; f1 = 100; f2 = 300; f3 =
+       500; t = 0:(1/Fs):1;
+       x = sin(2*pi*f1*t)+sin(2*pi*f2*t)+sin(2*pi*f3*t); % input signal
+       fp = [250 350]; fs = [150 450];      % band edge frequencies
+       wp = fp/(Fs/2); ws = fs/(Fs/2);      % normalize the frequencies
+       wc = (wp+ws)/2;                      % cutoff frequency
+       tw = min(abs(wp-ws));                % transition width
+       N = ceil(8/tw);                      % order of the filter
+       win = bartlett(N+1);    % Bartlett window used to get 25 dB attenuation
+       b = fir1(N,wc,"bandpass",win);      % filter coefficients
+       [h w] = freqz(b,1,512,Fs);          % 512-point frequency response,
+       w in Hz
+
+       plot(w,20*log10(abs(h))); grid on;
+       title('Bandpass filter using Bartlett window');
+       ylabel('Gain in dB'); xlabel('Frequency in Hz');
+       y = filter(b,1,x);                   % filtered output
+       X = fft(x,512); Y = fft(y,512);
+       L = length(X)/2; f = (0:(L-1))/L*(Fs/2);
+       figure; subplot(211); plot(f,abs(X(1:L)));
+       title('Spectrum of input');
+       subplot(212); plot(f,abs(Y(1:L)));
+       title('Spectrum of output'); xlabel('Frequency in Hz');
+
+
+
+
+                                                                                               51
+School of Electrical Engineering
+DSP Lab                                           Manipal Institute of Technology Bengaluru
+
+
+
+
+ Example-4: Design the filter specified in problem no.1 using frequency sampling design
+ technique assuming linear phase. Desired specifications are: ωp = 0.2π rad, ωs = 0.4π rad.
+
+       clc, clear all, close all;
+       M = 20;                              % assume
+       Hr = [1 1 1 zeros(1,15) 1 1];        % desired frequency response
+       magnitude
+       k1 = 0:floor((M-1)/2);
+       k2 = floor((M-1)/2)+1:(M-1);
+       a = (M-1)/2;
+       b = [-a*2*pi*k1/M, a*2*pi*(M-k2)/M]; % desired frequency response
+
+                                                                                          52
+School of Electrical Engineering
+DSP Lab                                   Manipal Institute of Technology Bengaluru
+
+
+       phase angles
+       H = Hr.*exp(j*b);            % multiply magnitude and phase to get H
+       b = real(ifft(H,M));         % Inverse DFT to get b coefficients
+       [h w]=freqz(b,1);                     % frequency response plot
+       plot(w/pi,20*log10(abs(h)));
+       grid on; title('FIR LPF using frequency sampling
+       design'); xlabel('Normalized Frequency'),
+       ylabel('Gain in dB');
+
+
+
+
+                                                                                53
+School of Electrical Engineering
+DSP Lab                                            Manipal Institute of Technology Bengaluru
+
+
+5. Exercises
+
+
+ 1.    Design and plot the frequency response of a low-pass digital FIR filter whose desired
+       specifications are: ωp = 0.2π, ωs = 0.4π, using (a) Rectangular window, (b) Hanning
+       window, (c) Kaiser window. Compare the results.
+
+
+
+
+                                                                                           54
+School of Electrical Engineering
+DSP Lab                                           Manipal Institute of Technology Bengaluru
+
+
+ 2.    Design and plot the frequency response of a linear phase band-pass filter whose
+       specifications are as follows: Passband edges: [400Hz 500Hz], Stopband edges:
+       [300Hz 600Hz], Rp = 0.5dB and As = 40dB. The sampling frequency is 2 kHz, using (a)
+       Hamming window (b) Kaiser window.
+
+
+
+
+                                                                                         55
+School of Electrical Engineering
+DSP Lab                                               Manipal Institute of Technology Bengaluru
+
+
+ 3.    In example problem 4, the attenuation in the stopband is found to be inadequate. To
+       improve it, a few non-zero points are considered in the transition band. Use Hr[k] =
+       {1, 1, 1, 0.5, 0.1, zeros(1,11), 0.1, 0.5, 1, 1} and design the filter using frequency
+       sampling technique. Compare the results and find out whether there is any
+       improvement. If there is, then at what cost?
+
+
+
+
+                                                                                            56
+School of Electrical Engineering
+DSP Lab                                            Manipal Institute of Technology Bengaluru
+
+
+ 4.    Design the filter specified in exercise problem 2 using frequency sampling technique.
+
+
+
+
+       Experiment    Observation &      Results, Discussion     Exercise     Total [10]
+        Execution    Data Recording    and interpretation [2]     [2]
+           [3]             [3]
+
+
+
+
+                                                                                          57
+School of Electrical Engineering
+DSP Lab                            Manipal Institute of Technology Bengaluru
+
+
+
+
+                                                                         58
+School of Electrical Engineering
+DSP Lab                                             Manipal Institute of Technology Bengaluru
+
+
+                      
+
+========================================================================
+LAB NO.: 6
+LAB NAME: Image Processing
+EXPERIMENT NO.: 6
+EXPERIMENT NAME: Image Processing
+EXPERIMENT DEFINITION: Read, transform, enhance, filter, and analyze digital images in MATLAB.
+========================================================================
+
+MANUAL TEXT AND CODE (ORIGINAL EXTRACTION)
+
+Experiment 6: Image Processing
+1. Aim: To study the analysis of signals and systems in Z-domain
+
+
+2. Software used: MATLAB
+
+
+3.   Theory:
+Digital image processing involves manipulation and analysis of digital images to improve their
+quality or extract useful information. A digital image is represented as a two-dimensional
+array of pixels, where each pixel corresponds to an intensity or color value. Image processing
+techniques are widely used in applications such as medical imaging, remote sensing,
+surveillance, industrial inspection, computer vision, and multimedia systems.
+
+Basic image processing operations include image acquisition, grayscale conversion,
+histogram analysis, intensity transformations, filtering, and geometric transformations.
+Histogram analysis provides information about the distribution of pixel intensities and is
+useful for evaluating image contrast. Histogram equalization enhances image contrast by
+redistributing intensity levels, while negative, logarithmic, and gamma transformations modify
+image brightness and contrast for improved visualization. Spatial filtering techniques, such as
+mean, Gaussian, and median filtering, are used to smooth images, reduce noise, or preserve
+important image features. Other operations, including cropping, resizing, and color
+component extraction, enable the manipulation and analysis of specific image regions or
+color information. These fundamental image processing techniques provide the basis for
+advanced applications such as object recognition, image segmentation, compression, and
+computer vision.
+
+
+
+4. Example:
+
+     1. Image Reading, Display, and Basic Info Extraction
+img = imread('peppers.png');
+imshow(img);
+title('Original Image');
+
+% Get image information
+disp('Image size:');
+disp(size(img));
+disp('Image class:');
+disp(class(img));
+
+
+     2. Convert to Grayscale and Histogram Analysis
+img = imread('peppers.png');
+gray_img = rgb2gray(img);
+imshow(gray_img);
+title('Grayscale Image');
+
+                                                                                            59
+School of Electrical Engineering
+DSP Lab                                      Manipal Institute of Technology Bengaluru
+
+
+
+figure;
+imhist(gray_img);
+title('Histogram of Grayscale Image');
+
+
+   3. Image Enhancement using Histogram Equalization
+img = imread('peppers.png');
+gray_img = rgb2gray(img);
+eq_img = histeq(gray_img);
+% Display both images
+subplot(1,2,1);
+imshow(gray_img);
+title('Original Grayscale');
+
+subplot(1,2,2);
+imshow(eq_img);
+title('Equalized Image');
+% Plot histograms
+figure;
+subplot(1,2,1);
+imhist(gray_img);
+title('Original Histogram');
+
+subplot(1,2,2);
+imhist(eq_img);
+title('Equalized Histogram');
+
+
+   4. Image Filtering using Convolution (Smoothing and Sharpening)
+% Smoothing filter
+img = imread('peppers.png');
+gray_img = rgb2gray(img);
+h_smooth = fspecial('average', [5 5]);
+smooth_img = imfilter(gray_img, h_smooth);
+
+% Sharpening filter
+h_sharp = fspecial('unsharp');
+sharp_img = imfilter(gray_img, h_sharp);
+
+% Display results
+subplot(1,3,1);
+imshow(gray_img);
+title('Original');
+
+subplot(1,3,2);
+imshow(smooth_img);
+title('Smoothed');
+subplot(1,3,3);
+
+
+                                                                                   60
+School of Electrical Engineering
+DSP Lab                                         Manipal Institute of Technology Bengaluru
+
+
+imshow(sharp_img);
+title('Sharpened');
+
+
+   5. Image Negative Transformation
+% Read and convert to grayscale
+img = rgb2gray(imread('peppers.png'));
+
+% Create negative image
+negative_img = 255 - img;
+
+% Display original and negative
+subplot(1,2,1);
+imshow(img);
+title('Original Image');
+
+subplot(1,2,2);
+imshow(negative_img);
+title('Negative Image');
+
+
+   6. Logarithmic and Power-Law (Gamma) Transformations
+% Read and convert to grayscale
+img = im2double(rgb2gray(imread('peppers.png')));
+
+% Log transformation
+log_img = log(1 + img);
+log_img = log_img / max(log_img(:));         % Normalize
+
+% Gamma correction
+gamma = 0.5; % Try values like 0.4, 1.0, 2.0
+gamma_img = img .^ gamma;
+
+% Display results
+figure;
+subplot(1,3,1); imshow(img); title('Original');
+subplot(1,3,2); imshow(log_img); title('Log Transform');
+subplot(1,3,3); imshow(gamma_img); title(['Gamma Transform (\gamma = ',
+num2str(gamma), ')']);
+
+
+   7. Image Blurring using Gaussian Filter
+% Read and convert to grayscale
+img = rgb2gray(imread('peppers.png'));
+
+% Create Gaussian filter
+h = fspecial('gaussian', [5 5], 1.0);        % size, sigma
+
+% Apply filter
+
+                                                                                      61
+School of Electrical Engineering
+DSP Lab                                       Manipal Institute of Technology Bengaluru
+
+
+blurred = imfilter(img, h);
+
+% Display results
+figure;
+subplot(1,2,1); imshow(img); title('Original');
+subplot(1,2,2); imshow(blurred); title('Gaussian Blurred');
+
+
+   8. Image Cropping and Region of Interest (ROI) Selection
+img = imread('peppers.png');
+
+% Select ROI manually
+figure;
+imshow(img);
+title('Select ROI and Double Click');
+roi = imcrop; % Manually select ROI
+
+% Display cropped ROI
+figure;
+imshow(roi);
+title('Cropped ROI');
+
+
+   9. Median Filtering for Noise Removal
+% Read and convert to grayscale
+img = rgb2gray(imread('peppers.png'));
+
+% Add salt-and-pepper noise
+noisy_img = imnoise(img, 'salt & pepper', 0.05);
+
+% Apply median filter
+filtered_img = medfilt2(noisy_img, [3 3]);
+
+% Display
+figure;
+subplot(1,3,1); imshow(img); title('Original');
+subplot(1,3,2); imshow(noisy_img); title('Noisy Image');
+subplot(1,3,3); imshow(filtered_img); title('After Median Filtering');
+
+
+   10. Extract RGB from a colour image
+img = imread('peppers.png');
+
+r = img(:,:,1);
+g = img(:,:,2);
+b = img(:,:,3);
+
+% Display
+figure;
+
+
+                                                                                    62
+School of Electrical Engineering
+DSP Lab                                  Manipal Institute of Technology Bengaluru
+
+
+subplot(2,2,1); imshow(img); title('Original');
+subplot(2,2,2); imshow(r); title('Red colour extraction');
+subplot(2,2,3); imshow(g); title('Green colour extraction');
+subplot(2,2,4); imshow(b); title('Blue colour extraction');
+
+
+
+
+                                                                               63
+School of Electrical Engineering
+DSP Lab                                             Manipal Institute of Technology Bengaluru
+
+
+5. Exercises
+
+   1.    Image Brightness Adjustment - Read a color image and convert it to grayscale.
+        Increase the brightness by adding a constant value (e.g., 40) to each pixel. Decrease
+        the brightness by subtracting the same constant. Display the original, brighter, and
+        darker images.
+
+
+
+
+                                                                                            64
+School of Electrical Engineering
+DSP Lab                                         Manipal Institute of Technology Bengaluru
+
+
+   2. Image Rotation and Flipping - Perform basic geometric transformations on an image
+      like rotating the image by 90° and 180° and flipping the image horizontally and
+      vertically. Display all transformed images along with the original.
+
+
+
+
+                                                                                      65
+School of Electrical Engineering
+DSP Lab                                           Manipal Institute of Technology Bengaluru
+
+
+   3. Comparison of Mean and Median Filtering - Add salt-and-pepper noise to a grayscale
+      image. Apply a mean (average) filter and a median filter separately. Display the
+      original, noisy, mean-filtered, and median-filtered images. Compare the quality of the
+      filtered images.
+
+
+
+
+                                                                                          66
+School of Electrical Engineering
+DSP Lab                                             Manipal Institute of Technology Bengaluru
+
+
+   4. Image Resizing Using Interpolation - Resize the image to half of its original size and
+      then twice its original size. Display the original, reduced, and enlarged images.
+
+
+
+
+       Experiment    Observation &       Results, Discussion      Exercise    Total [10]
+        Execution    Data Recording     and interpretation [2]      [2]
+           [3]             [3]
+
+
+
+
+                                                                                               67
+School of Electrical Engineering
+DSP Lab                            Manipal Institute of Technology Bengaluru
+
+
+
+
+                                                                         68
+School of Electrical Engineering
+DSP Lab                                             Manipal Institute of Technology Bengaluru
+
+
+             Introduction to Code Composer Studio (CCS)
+
+
+1. Aim:
+   1. To get familiarized with code composer studio.
+   2. To implement basic DSP programs and verify the simulation.
+
+
+2. Introduction
+Code composer is the DSP industry’s first fully integrated development environment (IDE)
+with DSP-specific functionality. With a familiar environment liked MSbased C++TM, Code
+Composer lets you edit, build, debug, profile and manage project from a single unified
+environment. Other unique features include graphical signal analysis, injection/extraction of
+data signals via I/O, multi-processor debugging, automated testing and customization via a
+C-interpretive scripting language and much more.
+
+Code Composer Studio (CCS) Features:
+1. IDE
+2. Debug IDE
+3. Advanced watch windows
+4. Integrated editor
+5. File I/O, Probe points, and graphical algorithm scope probes.
+6. Advanced graphical signal analysis
+7. Interactive profiling
+8. Automated testing and customization via scripting
+9. Visual project management system
+10. Compile in the background while editing and debugging
+11. Multi-processor debugging
+12. Help on the target DSP
+
+
+Documents for Reference:
+Spru509-Code Composer Studio getting started guide.
+Spru189 -TMS320C6000 CPU and Instruction set guide.
+Spru189 -TMS320C6000 Peripherals guide.
+Slws106d- codec (TLV320AIC23) data manual.
+Spru402- Programmer’s reference guide.
+Sprs186j- TMS320C6713 DSP
+DSP Tools: www.ti.com/c6000
+Software: http://processors.wiki.ti.com/index.php/Category:Code_Composer_Studio_v6         or
+higher.
+Processor: http://www.ti.com/product/omap-1138
+
+
+
+
+                                                                                            69
+School of Electrical Engineering
+DSP Lab                                        Manipal Institute of Technology Bengaluru
+
+
+Example:
+Write a C code to generate a sinusoidal signal and implement the same on TMS320C6748
+DSP kit.
+• Procedure to create a simple non-real time project - Sine wave Generation:
+• Once you run the program, 128 no’s of sine samples has been printed in the Console
+Window.
+• To view the values in graph, Go to Tools - Graph - Single Time.
+• Set the Graph Properties as shown in the Picture.
+• Buffer size: 128 (No. of samples)
+• DSP Data Type: 32-Bit floating point
+• Start Address: m
+• Display Data Size: 128
+• Click: Ok
+• Graph will be plotted.
+
+Exercise:
+Write a C code to generate a random wave and implement the same on TMS320C6748 DSP
+kit.
+
+
+
+
+                                                                                       70
+School of Electrical Engineering
+DSP Lab                                             Manipal Institute of Technology Bengaluru
+
+
+ 
+
+========================================================================
+LAB NO.: 7
+LAB NAME: DFT Computation Using TMS320C6748 DSP Starter Kit
+EXPERIMENT NO.: 7
+EXPERIMENT NAME: DFT Computation Using TMS320C6748 DSP Starter Kit
+EXPERIMENT DEFINITION: Compute the N-point DFT and IDFT of a sequence on the TMS320C6748 DSP kit.
+========================================================================
+
+MANUAL TEXT AND CODE (ORIGINAL EXTRACTION)
+
+Experiment 7: DFT computation using TMS320C6748 DSP
+                      starter kit
+1. Aim: To compute n-point DFT of a given sequence using TMS320C6748 DSP starter kit.
+
+
+2. Hardware/ Software used: TMS320C6748 DSP starter kit, PC with code composer
+   studio (CCS version 3.1)
+
+
+3.   Theory:
+ DFT of a discrete time signal transforms the signal in time domain into frequency domain
+signal.
+
+
+DFT EQUATION:
+
+The sequence of N complex numbers x0, ..., xN−1 is transformed into another sequence of N
+complex numbers according to the DFT formula:
+
+
+
+
+The inverse discrete Fourier transform (IDFT) is given by:
+
+
+
+
+                                                                                            71
+School of Electrical Engineering
+DSP Lab                                         Manipal Institute of Technology Bengaluru
+
+
+4. Example: Compute n-point DFT of the sequence (1 1 2 -2 3 0 5 1) and the code needs to
+   be implemented on the DSP processor.
+
+
+
+
+                                                                                      72
+School of Electrical Engineering
+DSP Lab                                          Manipal Institute of Technology Bengaluru
+
+
+5. Exercise: Compute n-point IDFT of the sequence (1 1 2 -2 3 0 5 1) and the code needs
+   to be implemented on the DSP processor.
+
+
+
+
+                                                                                       73
+School of Electrical Engineering
+DSP Lab                                          Manipal Institute of Technology Bengaluru
+
+
+
+
+       Experiment    Observation &     Results, Discussion     Exercise   Total [10]
+        Execution    Data Recording   and interpretation [2]     [2]
+           [3]             [3]
+
+
+
+
+                                                                                       74
+School of Electrical Engineering
+DSP Lab                                                Manipal Institute of Technology Bengaluru
+
+
+            
+
+SUPPLEMENTARY PHOTOGRAPHS — LAB 7
+LAB 7 — ADDITIONAL PHOTOGRAPHED DFT PROGRAM (16db48cc...JPG)
+The source photograph contains the following code. It uses the same variable sizes and expressions shown in the photo.
+
+#include<stdio.h>
+#include<math.h>
+int N,k,n,i;
+float pi=3.1416,sumre=0, sumim=0,out_real[8]={0.0}, out_imag[8]={0.0};
+int x[32];
+void main(void)
+{
+printf("   enter the length of the sequence\n");
+    scanf("%d",&N);
+    printf("   enter the sequence\n");
+    for(i=0;i<N;i++)
+    scanf("%d",&x[i]);
+for(k=0;k<N;k++)
+{
+sumre=0;
+sumim=0;
+
+for(n=0;n<N;n++)
+{
+sumre=sumre+x[n]* cos(2*pi*k*n/N);
+sumim=sumim-x[n]* sin(2*pi*k*n/N);
+}
+out_real[k]=sumre;
+out_imag[k]=sumim;
+printf("X([%d])=\t%f\t+\t%fi\n",k,out_real[k],out_imag[k]);
+}
+}
+
+LAB 7 — ADDITIONAL PHOTOGRAPHED IDFT PROGRAM (010064ae...JPG)
+Transcribed as shown, including its original names and formula. The image labels the inner loop “DFT calculation” even though the heading says IDFT.
+
+//IDFT
+#include<stdio.h>
+#include<math.h>
+#define pi 3.14
+
+void main()
+{
+float xr[20],xi[20],y[20];
+int N,i,k,n,theta;
+
+printf("\nEnter the no of points of idft \t:");
+scanf("%d",&N);
+printf("\nEnter the function variables of f(n) to calculate IDFT in the complex form (e.g. 3+j4 enter as a 3 4)\n");
+for(i=0;i<N;i++)
+{
+scanf("%f\t%f",&xr[i],&xi[i]);
+}
+
+for(k=0;k<N;k++)
+{
+y[k]=0.0;
+
+for(n=0;n<N;n++) /*DFT calculation*/
+{
+theta= (2*pi*k*n)/N;
+y[k]=y[k]+xr[n]*cos(theta)-xi[n]*sin(theta);
+}
+y[k]=y[k]/N;
+}
+/*Display values of F[k]*/
+printf("\nIDFT OF GIVEN SIGNAL:-\n");
+for(i=0;i<N;i++)
+{
+printf("\n%f\n",y[i]);
+}
+}
+
+The other DFT photograph (461e816f...JPG) is console output for the DFT input 1 1 2 -2 3 0 5 1, not a third source program.
+
+
+========================================================================
+LAB NO.: 8
+LAB NAME: IIR Filter Implementation Using TMS320C6748 DSP Starter Kit
+EXPERIMENT NO.: 8
+EXPERIMENT NAME: IIR Filter Implementation Using TMS320C6748 DSP Starter Kit
+EXPERIMENT DEFINITION: Implement and observe an IIR digital filter on the TMS320C6748 DSP kit.
+========================================================================
+
+MANUAL TEXT AND CODE (ORIGINAL EXTRACTION)
+
+Experiment 8: IIR Filter Implementation using
+                      TMS320C6748 DSP kit
+
+
+1. Aim: To design and implement a Digital IIR Filter using the DSP kit and observe its
+   frequency response.
+
+
+2. Hardware/ Software used: TMS320C6748 DSP starter kit, PC with code composer
+   studio (CCS version 3.1), CRO and function generator.
+
+
+3.   Theory:
+     Infinite Impulse response (IIR) filter possesses an output response to an impulse which is
+     of an infinite duration. The impulse response is "infinite" since there is feedback in the
+     filter, which is if you put in an impulse, then its output must produce for infinite duration
+     of time. The aim of this laboratory exercise is to design and implement a Digital IIR Filter
+     & observe its frequency response. In this experiment we design a simple IIR filter to stop
+     or attenuate required band of frequencies components and pass the frequency
+     components which are outside the required band.
+
+
+4. Example 1: To design and implement IIR filter on DSK6748 board.
+Algorithm to implement:
+Realize the Butter worth band pass IIR filter by implementing the difference equation y[n] =
+b0x[n] + b1x[n-1]+b2x[n-2]-a1y[n-1]-a2y[n-2] where b0 – b2, a0-a2 are feed forward and feedback
+word coefficients respectively [Assume 2nd order of filter].These coefficients are calculated
+using MATLAB. A direct form I implementation approach is taken.
+
+
+Step 1 - Initialize the McASP, the DSP board and the on board codec.
+
+Step 2 - Initialize the discrete time system, that is, specify the initial conditions. Generally
+zero initial conditions are assumed.
+
+Step 3 - Take sampled data from codec while input is fed to DSP kit from the signal
+generator. Since Codec is stereo, take average of input data read from left and right channel.
+Store sampled data at a memory location.
+
+Step 4 - Perform filter operation using above said difference equation and store filter Output
+at a memory location.
+
+Step 5 - Output the value to codec (left channel and right channel) and view the output at
+Oscilloscope.
+
+Step 6 - Go to step 3.
+
+
+
+
+                                                                                                   75
+School of Electrical Engineering
+DSP Lab                                                Manipal Institute of Technology Bengaluru
+
+
+Procedure:
+       •      Add bs1800int.cof file that contains filter co-efficient (will be in IIR filter folder)
+       •      After successful generation of .out file connect target to host PC
+       •      Connect signal generator to LINE INPUT with 2Vp-p Sine Wave frequency is set
+       according to filter co-efficient.
+       •       Connect CRO to LINE OUT with volt/div at 1 and time/div at 5msec.
+
+
+
+Note:
+To convert the floating-point coefficients (obtained from MATLAB program) into its equivalent
+16-bit fixed point representation, multiply coefficients by a factor = 2 15=32768.
+
+
+
+
+                                                                                                  76
+School of Electrical Engineering
+DSP Lab                                             Manipal Institute of Technology Bengaluru
+
+
+5. Exercise:
+1.     Design an IIR Butterworth high-pass filter having cut-off frequency of 7000Hz. Here the
+IIR HPF must be written using MATLAB and the coefficients must be first converted to its fixed-
+point equivalent and then copied.
+
+
+
+
+                                                                                            77
+School of Electrical Engineering
+DSP Lab                                          Manipal Institute of Technology Bengaluru
+
+
+2.     Write C-program to generate four (choose any four frequency components below
+1000Hz) different tones at the speaker out, which are controlled by the onboard DIP switch
+(SW3).
+
+
+
+
+       Experiment    Observation &     Results, Discussion     Exercise   Total [10]
+        Execution    Data Recording   and interpretation [2]     [2]
+           [3]             [3]
+
+
+
+
+                                                                                       78
+School of Electrical Engineering
+DSP Lab                                             Manipal Institute of Technology Bengaluru
+
+
+           
+
+========================================================================
+LAB NO.: 9
+LAB NAME: FIR Filter Implementation Using TMS320C6748 DSP Starter Kit
+EXPERIMENT NO.: 9
+EXPERIMENT NAME: FIR Filter Implementation Using TMS320C6748 DSP Starter Kit
+EXPERIMENT DEFINITION: Implement and verify a finite impulse response filter on the TMS320C6748 DSP kit.
+========================================================================
+
+MANUAL TEXT AND CODE (ORIGINAL EXTRACTION)
+
+Experiment 9: FIR Filter Implementation using
+                       TMS320C6748 DSK
+
+
+1. Aim: To implement FIR filters on the DSK and verify their working.
+
+
+2. Hardware/ Software used: TMS320C6748 DSP starter kit, PC with code composer
+   studio (CCS version 3.1), CRO and function generator.
+
+
+3.   Theory:
+The FIR filters are of non-recursive type, whereby the present output sample is depending
+on the present input sample and previous input samples. The transfer function of a FIR
+causal filter is given by,
+
+
+
+
+Where h(n) is the impulse response of the filter.
+
+The Fourier transform of h(n) is
+
+
+
+
+In the design of FIR filters most used approach is using windows. The desired frequency
+response Hd(ejw) of a filter is periodic in frequency and can be expanded in Fourier series.
+The resultant series is given by,
+
+
+
+4. Example
+
+To design and implement FIR filter on DSK6748 board.
+
+Designing an FIR filter:
+Following are the steps to design linear phase FIR filters Using Windowing Method
+
+1. Clearly specify the filter specifications.
+      Eg: Order = 30; Sampling Rate = 8000 samples/sec Cut off Freq. = 400 Hz.
+
+2. Compute the cut-off frequency Wc
+
+       Eg: Wc = 2*pi* fc / Fs
+
+                = 2*pi* 400/8000 = 0.1*pi
+
+3. Compute the desired Impulse Response h d (n) using particular Window
+     Eg: b_rect1=fir1(order, Wc , 'high',boxcar(31));
+
+4. Convolve input sequence with truncated Impulse Response x (n)*h (n).
+
+
+                                                                                               79
+School of Electrical Engineering
+DSP Lab                                             Manipal Institute of Technology Bengaluru
+
+
+
+Using MATLAB to determine filter coefficients:
+
+Using FIR1 Function on MATLAB.
+   • B = FIR1(N,Wn) designs an N'th order lowpass FIR digital filter and returns the filter
+       coefficients in length N+1 vector B.
+   • The cut-off frequency Wn must be between 0 < Wn < 1.0, with 1.0 corresponding to
+       half the sample rate. The filter B is real and has linear phase, i.e., even symmetric
+       coefficients obeying B(k) = B(N+2-k), k = 1,2,...,N+1.
+   • If Wn is a two-element vector, Wn = [W1 W2], FIR1 returns an order N bandpass filter
+       with passband W1 < W < W2. B = FIR1(N,Wn,'high') designs a highpass filter. B =
+       FIR1(N,Wn,'stop') is a bandstop filter if Wn = [W1 W2].
+   • If Wn is a multi-element vector, Wn = [W1 W2 W3 W4 W5 ... WN], FIR1 returns an order
+       N multiband filter with bands 0 < W < W1, W1 < W < W2, ..., WN < W < 1. B =
+       FIR1(N,Wn,'DC-1') makes the first band a passband. B = FIR1(N,Wn,'DC-0') makes the
+       first band a stopband.
+   • For filters with a passband near Fs/2, e.g., highpass and bandstop filters, N must be
+       even.
+   • By default FIR1 uses a Hamming window. Other available windows, including Boxcar,
+       Hanning, Bartlett, Blackman, Kaiser and Chebwin can be specified with an optional
+       trailing argument. For example, B = FIR1(N,Wn,kaiser(N+1,4)) uses a Kaiser window
+       with beta=4. B = FIR1(N,Wn,'high',chebwin(N+1,R)) uses a Chebyshev window.
+   • By default, the filter is scaled so the center of the first pass band has magnitude exactly
+       one after windowing. Use a trailing 'noscale' argument to prevent this scaling, e.g. B =
+       FIR1(N,Wn,'noscale'), B = FIR1(N,Wn,'high','noscale'), B =
+       FIR1(N,Wn,wind,'noscale').
+
+
+Procedure:
+   • After successful generation of .out file connect target to host PC.
+   • Connect signal generator to LINE INPUT with 2Vp-p Sine Wave frequency is set
+      according to filter co-efficient.
+   • Connect CRO to LINE OUT with volt/div at 1 and time/div at 5msec.
+
+
+
+
+                                                                                             80
+School of Electrical Engineering
+DSP Lab                                         Manipal Institute of Technology Bengaluru
+
+
+5. Exercise:
+ 1.    Implement an FIR low-pass filter having cut-off frequency of 1000Hz. This should
+ contain the coefficients for FIR LPF which are obtained from MATLAB using fir1 function
+ using rectangular window-based design.
+
+
+
+
+                                                                                      81
+School of Electrical Engineering
+DSP Lab                                             Manipal Institute of Technology Bengaluru
+
+
+ 2.    Realization of an FIR filter (any type) to meet given specifications. The input can be a
+ signal from function generator / speech signal.
+
+
+
+
+       Experiment    Observation &       Results, Discussion      Exercise    Total [10]
+        Execution    Data Recording     and interpretation [2]      [2]
+           [3]             [3]
+
+
+
+
+                                                                                            82
+School of Electrical Engineering
+DSP Lab                                             Manipal Institute of Technology Bengaluru
+
+
+
+
+========================================================================
+LAB NO.: 10
+LAB NAME: Audio/Speech Processing Using TMS320C6748 DSP Starter Kit
+EXPERIMENT NO.: 10
+EXPERIMENT NAME: Audio/Speech Processing Using TMS320C6748 DSP Starter Kit
+EXPERIMENT DEFINITION: Configure the AIC3106 codec for audio talk-through, echo, and delay processing on the DSP kit.
+========================================================================
+
+MANUAL TEXT AND CODE (ORIGINAL EXTRACTION)
+
+Experiment 10: Audio Processing using TMS320C6748 DSK
+
+
+1. Aim: To configure the codec AIC3106 for a talk through program using the board support
+   library.
+
+
+2. Hardware/ Software used: TMS320C6748 DSP starter kit, PC with code composer
+   studio (CCS version 3.1), CRO, Audio Source, Speakers, headphone and Signal
+   Generator.
+
+
+3.   Theory:
+  Speech is an acoustic signal, which is produced when air is forced from the human lungs
+through the vocal chords (glottis) and along the vocal tract. The human voice conveys
+information which is received by our ears and decoded by the brain according to the sounds
+used in the language used. Speech signal is a highly non-stationary signal, having many
+frequency components. It is required to find out which frequency is present at what time
+period. This is called time resolution of frequency. Speech signal is actually slowly time-
+varying signal, i.e., when observed over a sufficiently short duration of time, it is fairly
+stationary. Therefore, we take short-time Fourier transform (STFT) of speech signal to find its
+frequency content.
+
+
+4. Example: To configure the codec AIC3106 for a talk through program using the board
+   support library.
+
+
+Procedure:
+   • All the Real time implementations covered in the Implementations module follow code
+      Configuration using board support library.
+   • The board Support Library (CSL) is a collection of functions, macros, and symbols
+      used to configure and control on-chip peripherals.
+   • The goal is peripheral ease of use, shortened development time, portability, hardware
+      abstraction, and some level of standardization and compatibility among TI devices.
+   • Connect one end of a stereo cable to the LINE IN(J55) of the kit and other end to PC
+      (or function generator).
+   • Connect the headphone (or CRO) to the LINE OUT(J56) of the kit.
+   • Connect the power supply to the board.
+   • Connect the External JTAG XDS100v2 with board and PC.
+
+General Steps for Real Time Programs:
+
+R1. Create project.
+    • Go to File ->new->CCS project and enter the details as done in NR3 but only change
+       in “is Advanced Settings” choose the Linker command file: as “linker_dsp.cmd”
+       (Browse from Supporting files folder given at the time of installation).
+
+                                                                                             83
+School of Electrical Engineering
+DSP Lab                                            Manipal Institute of Technology Bengaluru
+
+
+R2. Create source file to write code.
+    • Once the program is written, save it.
+
+R3. Now add the following library files and supporting files of codec to your project. To add
+files goto Project-> Add files.
+R4. Right click on the project name and choose “Show Build Settings..” -> Build-> C6000
+Compiler-> Include Options -> Click “Add” as shown in the figure.
+R5. Build Project, Load and Resume the project.
+
+   •   After clicking the Resume option, play the music now. You can hear the song from the
+       headphones without any noise. Alternatively, you can also connect function generator
+       to the LINE IN and CRO to the LINE OUT. At this time, you can observe same wave
+       appearing on the CRO which is given in function generator. Thus, the CODEC is
+       verified. You can also try changing the sampling frequency, gain of the codec.
+   •   Note: if you want to play loop signal only in right channel then change the 6th line to
+       output_right_sample(sample). If you want to play loop signal only in left channel then
+       change the 6th line to output_left_sample(sample).
+
+
+
+
+                                                                                           84
+School of Electrical Engineering
+DSP Lab                                         Manipal Institute of Technology Bengaluru
+
+
+5. Exercise:
+1.    Configure the codec AIC3106 for creating ECO effect through program using the board
+support library.
+
+
+
+
+                                                                                      85
+School of Electrical Engineering
+DSP Lab                                          Manipal Institute of Technology Bengaluru
+
+
+2.     Configure the codec AIC3106 for creating Delay effect through program using the
+board support library.
+
+
+
+
+       Experiment    Observation &     Results, Discussion     Exercise   Total [10]
+
+SUPPLEMENTARY PHOTOGRAPHS — LAB 10
+LAB 10 — ADDITIONAL PHOTOGRAPHED ECHO PROGRAM (ad4f006e...JPG)
+// L138_echo_intr.c
+//
+
+#include "L138_LCDK_aic3106_init.h"
+#define GAIN 0.6
+#define BUF_SIZE 16000
+
+int16_t input,output,delayed;
+int16_t buffer[BUF_SIZE];
+int i = 0;
+
+interrupt void interrupt4(void) // interrupt service routine
+{
+    input = input_left_sample();
+    delayed = buffer[i];
+    output = delayed + input;
+    buffer[i] = input + delayed*GAIN;
+    i = (i+1)%BUF_SIZE;
+    output_left_sample(output);
+    return;
+}
+
+int main(void)
+{
+    int i;
+
+    for (i=0 ; i<BUF_SIZE ; i++)
+    {
+        buffer[i] = 0;
+    }
+    L138_initialise_intr(FS_48000_HZ,ADC_GAIN_0DB,DAC_ATTEN_0DB,LCDK_MIC_INPUT);
+    while(1);
+}
+
+LAB 10 — ADDITIONAL PHOTOGRAPHED DELAY PROGRAM (caac22f8...JPG)
+// L138_delay_intr.c
+//
+
+#include "L138_LCDK_aic3106_init.h"
+#define BUF_SIZE 24000
+
+uint16_t input,output,delayed;
+uint16_t buffer[BUF_SIZE];
+int i = 0;
+
+interrupt void interrupt4(void) // interrupt service routine
+{
+    input = input_left_sample();
+    delayed = buffer[i];
+    output = delayed + input;
+    buffer[i] = input;
+    i = (i+1)%BUF_SIZE;
+    output_left_sample(output);
+    return;
+}
+
+int main(void)
+{
+    int i;
+
+    for (i=0 ; i<BUF_SIZE ; i++)
+    {
+        buffer[i] = 0;
+    }
+    L138_initialise_intr(FS_48000_HZ,ADC_GAIN_0DB,DAC_ATTEN_0DB,LCDK_MIC_INPUT);
+    while(1);
+}
